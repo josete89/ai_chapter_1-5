@@ -5,7 +5,7 @@ def testSuccess():
 
 def testResult(result,expected,got):
     if result == False:
-        print("Expected value '{0}' got '{1}' ".format(expected,got))
+        print("Expected value '{0}' got '{1}' ".format(got,expected))
         assert result
     else:
         testSuccess()
@@ -47,10 +47,10 @@ def testPrepareTargetData(targetDataFunc):
             testResult(True,None,None)
         else:
             fail = test if train.dtype == np.dtype(np.float32) else train
-            testResult(False, "Type is not float32", fail)
+            testResult(False, fail,"Type is not float32")
     else:
         fail = test if type(train) is np.ndarray else train
-        testResult(False,"NUMPY ARRAY",fail)
+        testResult(False,fail,"NUMPY ARRAY")
 
 def testPredictionFormat(predictionFormatFunc,maxPosition):
     testInput = 'movie test'
@@ -60,3 +60,9 @@ def testPredictionFormat(predictionFormatFunc,maxPosition):
     res = predictionFormatFunc(testInput)
     opRes = np.array_equal([arr],res)
     testResult(opRes,arr,res)
+
+def testModelStructure(modelFunc):
+    modelResult = modelFunc()
+    expected = len(modelResult.layers) == 3
+    numLayers = len(modelResult.layers)
+    testResult(expected,numLayers,"Expected 3 layers")
